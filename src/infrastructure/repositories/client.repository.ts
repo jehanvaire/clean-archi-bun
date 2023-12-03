@@ -20,6 +20,10 @@ export class ClientStorage implements Ports.ClientStorage {
                     new Error(`Client with mail ${client.mail} already exists`)
             };
         }
+
+        // ajout id unique
+        client.id = Math.random().toString(36).substring(2, 11);
+
         fs.appendFileSync(this.filePath, JSON.stringify(client) + '\n');
         return { success: true, value: client };
     }
