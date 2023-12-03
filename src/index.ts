@@ -34,24 +34,45 @@ app.post("/client", (body: any) => {
 });
 
 app.post("/produit", (body: any) => {
-  
-    const { nom, prix } = body.query as { nom: string, prix: number };
-  
-    const storagePort = new Repositories.ProduitStorage('./resources/produits.json');
-    // const loggerPort = new Repositories.LoggerRepository();
-    const usecase = new Usecases.AddProduit(storagePort);
-    const result = usecase.execute({ nom, prix });
-  
-    if (result.success) {
-      // return json result
-      return result.value;
-    } else {
-      // return error
-      return result.error;
-    }
-  
+
+  const { nom, prix } = body.query as { nom: string, prix: number };
+
+  const storagePort = new Repositories.ProduitStorage('./resources/produits.json');
+  // const loggerPort = new Repositories.LoggerRepository();
+  const usecase = new Usecases.AddProduit(storagePort);
+  const result = usecase.execute({ nom, prix });
+
+  if (result.success) {
+    // return json result
+    return result.value;
+  } else {
+    // return error
+    return result.error;
   }
-);
+
+});
+
+app.post("/facture", (body: any) => {
+
+  const { clientId, produits } = body.query as { clientId: number, produits: number[] };
+
+  const storagePort = new Repositories.FactureStorage('./resources/factures.json');
+  // const loggerPort = new Repositories.LoggerRepository();
+  const usecase = new Usecases.AddFacture(storagePort);
+  const result = usecase.execute({
+    clientId,
+    produits
+  });
+
+  if (result.success) {
+    // return json result
+    return result.value;
+  } else {
+    // return error
+    return result.error;
+  }
+
+});
 
 app.listen(3000);
 
