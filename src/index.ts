@@ -14,11 +14,9 @@ app.post("/hello", () => {
   return `Hello aaaa!`;
 });
 
-app.post("/client", ({ body }) => {
+app.post("/client", (body: any) => {
 
-  console.log(body);
-
-  const { nom, prenom, mail } = body as { nom: string, prenom: string, mail: string };
+  const { nom, prenom, mail } = body.query as { nom: string, prenom: string, mail: string };
 
   const storagePort = new Repositories.ClientStorage('./resources/clients.json');
   // const loggerPort = new Repositories.LoggerRepository();
@@ -26,11 +24,11 @@ app.post("/client", ({ body }) => {
   const result = usecase.execute({ nom, prenom, mail });
 
   if (result.success) {
-      // return json result
-      return result.value;
+    // return json result
+    return result.value;
   } else {
-      // return error
-      return result.error;
+    // return error
+    return result.error;
   }
 
 });
