@@ -46,14 +46,14 @@ export class FactureStorage implements Ports.FactureStorage {
     }
 
     private getFactures(): Entities.Facture[] {
-        const facture: Entities.Facture[] = [];
+        const factures: Entities.Facture[] = [];
         const lines = fs.readFileSync(this.filePath, 'utf-8').split('\n');
         lines.forEach((line) => {
             if (line !== '') {
                 const facture = JSON.parse(line);
-                facture.push(facture);
+                factures.push(facture);
             }
         });
-        return facture;
+        return factures;
     }
 }

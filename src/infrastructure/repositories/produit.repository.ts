@@ -44,14 +44,14 @@ export class ProduitStorage implements Ports.ProduitStorage {
     }
 
     private getProduits(): Entities.Produit[] {
-        const produit: Entities.Produit[] = [];
+        const produits: Entities.Produit[] = [];
         const lines = fs.readFileSync(this.filePath, 'utf-8').split('\n');
         lines.forEach((line) => {
             if (line !== '') {
                 const produit = JSON.parse(line);
-                produit.push(produit);
+                produits.push(produit);
             }
         });
-        return produit;
+        return produits;
     }
 }
