@@ -1,4 +1,4 @@
-import * as Ports from '../../business/ports'
+import * as Ports from '../ports'
 import * as Entities from '../../domain/entities';
 import { Result } from '../types';
 

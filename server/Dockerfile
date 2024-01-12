@@ -10,9 +10,12 @@ RUN bun install
 # Copy the current directory contents into the container at /app
 COPY . .
 
+# make the resources directory
+RUN mkdir ./src/resources
+
 # Set permissions 
-# RUN chmod 770 ./src/resources
+RUN chmod 770 ./src/resources
 
 # run the app
-EXPOSE 3000/tcp
+EXPOSE 5000
 ENTRYPOINT ["bun", "run", "--watch", "src/index.ts"]
