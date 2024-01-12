@@ -1,9 +1,20 @@
 version: "3"
-
 services:
-  web:
-    build: .
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./src:/app/src
+   frontend:
+       container_name: web-client
+       build:
+           context: ./client
+           dockerfile: Dockerfile
+       ports:
+           - "3000:3000"
+       volumes:
+           - ./client:/usr/src/app
+   backend:
+       container_name: web-server
+       build:
+           context: ./server
+           dockerfile: Dockerfile
+       ports:
+           - "5000:5000"
+       volumes:
+           - ./server:/usr/src/app
