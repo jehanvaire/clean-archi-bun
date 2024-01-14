@@ -37,10 +37,11 @@ export class ClientStorage implements Ports.ClientStorage {
 
     private clientAlreadyExists(client: Entities.Client): boolean {
         const clients = this.getClients();
-        return clients.some(c => c.mail === client.mail);
+        return clients.success && clients.value.some((c) => c.mail === client.mail);
     }
 
-    private getClients(): Entities.Client[] {
+    public getClients(): Result<Entities.Client[]> {
+        this.createDirIfNotExists();
         const clients: Entities.Client[] = [];
         const lines = fs.readFileSync(this.filePath, 'utf-8').split('\n');
         lines.forEach((line) => {
@@ -49,7 +50,10 @@ export class ClientStorage implements Ports.ClientStorage {
                 clients.push(client);
             }
         });
-        return clients;
+        return {
+            success: true,
+            value: clients
+        }
     }
 
 }
