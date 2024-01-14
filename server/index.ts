@@ -33,6 +33,23 @@ app.post("/client", (body: any) => {
 
 });
 
+app.get("/clients", () => {
+
+  const storagePort = new Repositories.ClientStorage('./resources/clients.json');
+  // const loggerPort = new Repositories.LoggerRepository();
+  const usecase = new Usecases.GetClients(storagePort);
+  const result = usecase.execute();
+
+  if (result.success) {
+    // return json result
+    return result.value;
+  } else {
+    // return error
+    return result.error;
+  }
+
+});
+
 app.post("/produit", (body: any) => {
 
   const { nom, prix } = body.query as { nom: string, prix: number };
