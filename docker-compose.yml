@@ -8,7 +8,8 @@ services:
        ports:
            - "3000:3000"
        volumes:
-           - ./client:/usr/src/app/client
+           - ./client:/app/client
+           - /app/client/node_modules
    backend:
        container_name: web-server
        build:
@@ -17,4 +18,4 @@ services:
        ports:
            - "5000:5000"
        volumes:
-           - ./server:/usr/src/app/server
+           - ./server:/app/server
