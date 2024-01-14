@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
-import * as Usecases from '../src/business/usecases';
-import * as Repositories from '../src/infrastructure/repositories';
+import * as Usecases from './src/business/usecases';
+import * as Repositories from './src/infrastructure/repositories';
 
 const app = new Elysia().get("/", () => "Hello Elysia");
 app.use(cors());

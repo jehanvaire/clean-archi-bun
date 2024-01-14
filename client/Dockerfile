@@ -1,8 +1,14 @@
 FROM node:lts-slim
 
-RUN mkdir -p /usr/src/app
+RUN mkdir -p /app/client
 
-WORKDIR /usr/src/app
+WORKDIR /app/client
+
+COPY package.json .
+
+RUN npm install
+
+COPY . .
 
 EXPOSE 3000
 
