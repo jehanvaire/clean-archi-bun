@@ -1,15 +1,17 @@
+import { Produit } from "./produit.entity";
+
 export interface IFacture {
     numero?: string;
     date?: Date;
     clientId: number;
-    produits: number[];
+    produits: Produit[] | string[];
 }
 
 export class Facture {
     numero: string;
     date: Date;
     clientId: number;
-    produits: number[];
+    produits: Produit[] | string[];
     prixTotal: number;
 
     constructor(facture: IFacture) {

@@ -7,3 +7,5 @@ export * from './usecases/addClient.usecase';
 export * from './usecases/getClients.usecase';
 export * from './usecases/updateClient.usecase';
 export * from './usecases/deleteClient.usecase';
+export * from './usecases/getFactures.usecase';
+export * from './usecases/deleteFacture.usecase';
