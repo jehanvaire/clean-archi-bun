@@ -12,46 +12,84 @@ export class ProduitStorage implements Ports.ProduitStorage {
         this.filePath = filePath;
     }
 
-    public createProduit(produit: Entities.Produit): Result<Entities.Produit> {
-        this.createDirAndFileIfNotExists();
-        if (this.produitAlreadyExists(produit)) {
-            return {
-                success: false, error:
-                    new Error(`Product with name ${produit.nom} already exists`)
-            };
-        }
-
-        // ajout id unique
-        produit.id = Math.random().toString(36).substring(2, 11);
-
-        fs.appendFileSync(this.filePath, JSON.stringify(produit) + '\n');
-        return { success: true, value: produit };
-    }
-
-    private createDirAndFileIfNotExists(): void {
-        const dir = path.dirname(this.filePath);
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-        if (!fs.existsSync(this.filePath)) {
-            fs.writeFileSync(this.filePath, '');
-        }
-    }
-
-    private produitAlreadyExists(produit: Entities.Produit): boolean {
-        const produits = this.getProduits();
-        return produits.some(p => p.nom === produit.nom);
-    }
-
-    private getProduits(): Entities.Produit[] {
-        const produits: Entities.Produit[] = [];
-        const lines = fs.readFileSync(this.filePath, 'utf-8').split('\n');
-        lines.forEach((line) => {
-            if (line !== '') {
-                const produit = JSON.parse(line);
-                produits.push(produit);
+    getProduits(): Result<Entities.Produit[]> {
+        try {
+            if (!fs.existsSync(this.filePath)) {
+                fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
+                fs.writeFileSync(this.filePath, '[]', 'utf8');
             }
-        });
-        return produits;
+
+            const data = fs.readFileSync(this.filePath, 'utf8');
+            const produits: Entities.Produit[] = JSON.parse(data);
+
+            return { success: true, value: produits };
+        } catch (error) {
+            return { success: false, error };
+        }
     }
+
+    createProduit(produit: Entities.Produit): Result<Entities.Produit> {
+        try {
+            let produits: Entities.Produit[] = [];
+
+            if (fs.existsSync(this.filePath)) {
+                const data = fs.readFileSync(this.filePath, 'utf8');
+                produits = JSON.parse(data);
+            } else {
+                fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
+                fs.writeFileSync(this.filePath, '[]', 'utf8');
+            }
+
+            produit.id = Math.random().toString(36).substring(2, 11);
+
+            produits.push(produit);
+            fs.writeFileSync(this.filePath, JSON.stringify(produits), 'utf8');
+
+            return { success: true, value: produit };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
+    updateProduit(updatedProduit: Entities.Produit): Result<Entities.Produit> {
+        try {
+            const data = fs.readFileSync(this.filePath, 'utf8');
+            let produits: Entities.Produit[] = JSON.parse(data);
+    
+            const index = produits.findIndex(produit => produit.id === updatedProduit.id);
+    
+            if (index === -1) {
+                return { success: false, error: new Error('Produit not found') };
+            }
+    
+            produits[index] = updatedProduit;
+            fs.writeFileSync(this.filePath, JSON.stringify(produits), 'utf8');
+    
+            return { success: true, value: updatedProduit };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+    
+    deleteProduit(id: string): Result<Entities.Produit> {
+        try {
+            const data = fs.readFileSync(this.filePath, 'utf8');
+            let produits: Entities.Produit[] = JSON.parse(data);
+    
+            const index = produits.findIndex(produit => produit.id === id);
+    
+            if (index === -1) {
+                return { success: false, error: new Error('Produit not found') };
+            }
+    
+            produits.splice(index, 1);
+            fs.writeFileSync(this.filePath, JSON.stringify(produits), 'utf8');
+    
+            return { success: true, value: {} as Entities.Produit };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
+
 }
