@@ -13,7 +13,7 @@ export class ClientStorage implements Ports.ClientStorage {
     }
 
     public createClient(client: Entities.Client): Result<Entities.Client> {
-        this.createDirIfNotExists();
+        this.createDirAndFileIfNotExists();
         if (this.clientAlreadyExists(client)) {
             return {
                 success: false, error:
@@ -28,10 +28,13 @@ export class ClientStorage implements Ports.ClientStorage {
         return { success: true, value: client };
     }
 
-    private createDirIfNotExists(): void {
+    private createDirAndFileIfNotExists(): void {
         const dir = path.dirname(this.filePath);
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
+        }
+        if (!fs.existsSync(this.filePath)) {
+            fs.writeFileSync(this.filePath, '');
         }
     }
 
@@ -41,7 +44,7 @@ export class ClientStorage implements Ports.ClientStorage {
     }
 
     public getClients(): Result<Entities.Client[]> {
-        this.createDirIfNotExists();
+        this.createDirAndFileIfNotExists();
         const clients: Entities.Client[] = [];
         const lines = fs.readFileSync(this.filePath, 'utf-8').split('\n');
         lines.forEach((line) => {
