@@ -1,26 +1,43 @@
 class RestClient {
-    private baseUrl = 'http://localhost:5000';
-   
-    public async get<T>(path: string, params?: Record<string, unknown>): Promise<T> {
-      const url = `${this.baseUrl}${path}`;
-      const response = await fetch(url, { method: 'GET' });
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      return response.json();
+    private baseUrl = 'http://localhost:5000/'
+
+    async get(url: string): Promise<any> {
+        const response = await fetch(this.baseUrl + url);
+        const data = await response.json();
+        return data;
     }
-   
-    public async post<T>(path: string, body: unknown): Promise<T> {
-      const url = `${this.baseUrl}${path}`;
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      return response.json();
+
+    async post(url: string, body: any): Promise<any> {
+        const response = await fetch(this.baseUrl + url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+        const data = await response.json();
+        return data;
     }
-   
+
+    async put(url: string, body: any): Promise<any> {
+        const response = await fetch(this.baseUrl + url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+        const data = await response.json();
+        return data;
+    }
+
+    async delete(url: string): Promise<any> {
+        const response = await fetch(this.baseUrl + url, {
+            method: 'DELETE',
+        });
+        const data = await response.json();
+        return data;
+    }
 }
 
 export default new RestClient();
