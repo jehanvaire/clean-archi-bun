@@ -20,6 +20,5 @@ root.render(
         <Route path="/factures" element={<Factures />} />
       </Routes>
     </Router>
-  </React.StrictMode>,
-
+  </React.StrictMode>
 );

@@ -1,47 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    TableCell
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableColumn,
 } from "@nextui-org/react";
-import clientService from '../services/clientService';
+import clientService from "../services/clientService";
 
 const Clients = () => {
-    const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState([]);
 
-    useEffect(() => {
-        const fetchClients = async () => {
-            const clients = await clientService.getClients();
-            setClients(clients);
-        };
+  useEffect(() => {
+    clientService.getClients().then((clients) => {
+      if (clients) {
+        console.log(clients);
+        setClients(clients);
+      } else {
+        console.error("Clients is undefined");
+      }
+    });
+  }, []);
 
-        fetchClients();
-    }, []);
-
-    return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableCell>Nom</TableCell>
-                    <TableCell>Prenom</TableCell>
-                    <TableCell>Email</TableCell>
-                    {/* Add more table cells for other client properties */}
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {clients.map((client: any) => (
-                    <TableRow key={client.id}>
-                        <TableCell>{client.nom}</TableCell>
-                        <TableCell>{client.prenom}</TableCell>
-                        <TableCell>{client.email}</TableCell>
-                        {/* Add more table cells for other client properties */}
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    );
+  return (
+    <Table aria-label="Example static collection table">
+      <TableHeader>
+        <TableColumn>Nom</TableColumn>
+        <TableColumn>Prenom</TableColumn>
+        <TableColumn>Email</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {clients.map((client: any) => (
+          <TableRow key={client.id}>
+            <TableCell align="center">{client.nom}</TableCell>
+            <TableCell align="center">{client.prenom}</TableCell>
+            <TableCell align="center">{client.mail}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
 };
 
 export default Clients;
