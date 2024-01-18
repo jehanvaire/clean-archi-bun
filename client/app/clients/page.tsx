@@ -4,6 +4,7 @@ import clientsService from "../services/clientService";
 import TableActions from "@/components/TableActions";
 import { Button } from "@nextui-org/react";
 import { title } from "@/components/primitives";
+import ModalCreationUser from "@/components/ModalCreationUser";
 
 const columns = [
   { name: "USER", uid: "name" },
@@ -17,6 +18,12 @@ async function getClients() {
 export default function Clients() {
   const [clients, setClients] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+  async function refreshClients() {
+    const data = await clientsService.getClients();
+    setClients(data);
+  }
 
   React.useEffect(() => {
     getClients().then((data) => {
@@ -26,8 +33,7 @@ export default function Clients() {
   }, []);
 
   async function createClient() {
-    // Logic to create a client
-    console.log("createClient");
+    setModalOpen(true);
   }
 
   if (loading) {
@@ -47,6 +53,14 @@ export default function Clients() {
       <div style={{ marginTop: "1rem" }}>
         <TableActions clients={clients} columns={columns} />
       </div>
+
+      {modalOpen && (
+        <ModalCreationUser
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onUserCreated={refreshClients}
+        />
+      )}
     </>
   );
 }

@@ -1,10 +1,10 @@
 import restClient from "./restClient";
 
 class ClientService {
-    private baseUrl = 'clients'
+    private baseUrl = 'client'
 
     async getClients() {
-        const response = await restClient.get(this.baseUrl);
+        const response = await restClient.get(this.baseUrl + 's');
         return response;
     }
 
