@@ -4,7 +4,6 @@ class RestClient {
     async get(url: string): Promise<any> {
         const response = await fetch(this.baseUrl + url);
         const data = await response.json();
-        console.log("data", data);
         return data;
     }
 
