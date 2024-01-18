@@ -4,14 +4,12 @@ services:
        container_name: web-client
        build:
            context: ./client
-           target: production
+           target: dev
            dockerfile: Dockerfile
        ports:
            - "3000:3000"
        volumes:
-           - ./client:/app/client
-           - /app/client/node_modules
-           - /app/client/.next
+           - ./client:/app
    backend:
        container_name: web-server
        build:
