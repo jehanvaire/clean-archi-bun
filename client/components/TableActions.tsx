@@ -14,9 +14,21 @@ import { EditIcon } from "@/components/EditIcon";
 import { DeleteIcon } from "@/components/DeleteIcon";
 import { EyeIcon } from "@/components/EyeIcon";
 import Accordeon from "./Accordeon";
+import ModalSuppressionProps from "./ModalSuppressionProps";
 
 export default function TableActions(props: any) {
   const { clients, columns } = props;
+
+  const [showModal, setShowModal] = React.useState(false);
+
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
+  const deleteItem = React.useCallback((item: any) => {
+    setShowModal(true);
+    console.log("delete item", item);
+  }, []);
 
   const renderCell = React.useCallback((item: any, columnKey: any) => {
     let cellValue = item[columnKey];
@@ -36,9 +48,7 @@ export default function TableActions(props: any) {
           </div>
         );
       case "produits":
-        return (
-          <Accordeon produits={item.produits}></Accordeon>
-        );
+        return <Accordeon produits={item.produits}></Accordeon>;
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
@@ -54,7 +64,7 @@ export default function TableActions(props: any) {
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon />
+                <DeleteIcon onClick={() => deleteItem(item.id)} />
               </span>
             </Tooltip>
           </div>
@@ -65,6 +75,7 @@ export default function TableActions(props: any) {
   }, []);
 
   return (
+    <>
       <Table aria-label="Example table with custom cells" className="w-full">
         <TableHeader columns={columns}>
           {(column: any) => (
@@ -86,5 +97,7 @@ export default function TableActions(props: any) {
           )}
         </TableBody>
       </Table>
+      {showModal && <ModalSuppressionProps onClose={handleClose} isOpen={true} typeProps={""} />}
+    </>
   );
 }

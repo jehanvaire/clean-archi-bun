@@ -4,11 +4,17 @@ import clientsService from "../services/clientService";
 import TableActions from "@/components/TableActions";
 import { Button } from "@nextui-org/react";
 import { title } from "@/components/primitives";
-import ModalCreationUser from "@/components/ModalCreationUser";
+import ModalCreationProps from "@/components/ModalCreationProps";
 
 const columns = [
   { name: "USER", uid: "name" },
   { name: "ACTIONS", uid: "actions" },
+];
+
+const modalContent = [
+  { input: "text", name: "Nom" },
+  { input: "text", name: "Prénom" },
+  { input: "email", name: "Email" },
 ];
 
 async function getClients() {
@@ -20,11 +26,18 @@ export default function Clients() {
   const [loading, setLoading] = React.useState(true);
   const [modalOpen, setModalOpen] = React.useState(false);
 
-  async function refreshClients() {
-    const data = await clientsService.getClients();
-    setClients(data);
+  async function refreshClients(values: any) {
+    await clientsService.addClient(
+      {
+        nom: values.Nom,
+        prenom: values.Prénom,
+        mail: values.Email,
+      }
+    );
+    setClients(await clientsService.getClients());
+    setModalOpen(false);
   }
-
+  
   React.useEffect(() => {
     getClients().then((data) => {
       setClients(data);
@@ -55,10 +68,12 @@ export default function Clients() {
       </div>
 
       {modalOpen && (
-        <ModalCreationUser
+        <ModalCreationProps
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
-          onUserCreated={refreshClients}
+          typeProps="utilisateur"
+          modalContent={modalContent}
+          onData={refreshClients}
         />
       )}
     </>
