@@ -13,17 +13,19 @@ import {
 
 interface ModalSuppressionProps {
   isOpen: boolean;
-  typeProps: string;
-  onClose: (data: any) => void;
+  onClose: () => void;
+  onDelete: (data: any) => void;
+  propToDelete: any;
 }
 
 export default function ModalSuppressionProps({
   isOpen,
-  typeProps,
   onClose,
+  onDelete,
+  propToDelete,
 }: ModalSuppressionProps) {
   const deleteProp = () => {
-    console.log("delete prop");
+    onDelete(propToDelete);
   };
 
   return (
@@ -37,7 +39,7 @@ export default function ModalSuppressionProps({
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Ajout {typeProps}
+              <h1>Supprimer {propToDelete.id} ?</h1>
             </ModalHeader>
             {/* <ModalBody>
               {modalContent.map((item) => (
@@ -47,11 +49,11 @@ export default function ModalSuppressionProps({
               ))}
             </ModalBody> */}
             <ModalFooter>
-              <Button color="danger" variant="flat" onPress={onClose}>
+              <Button color="default" variant="flat" onPress={onClose}>
                 Annuler
               </Button>
-              <Button color="primary" onPress={deleteProp}>
-                Ajouter
+              <Button color="danger" onPress={deleteProp}>
+                Supprimer
               </Button>
             </ModalFooter>
           </>

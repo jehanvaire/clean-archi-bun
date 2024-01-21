@@ -2,7 +2,12 @@ class RestClient {
     private baseUrl = 'http://localhost:5000/'
 
     async get(url: string): Promise<any> {
-        const response = await fetch(this.baseUrl + url);
+        const response = await fetch(this.baseUrl + url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
         const data = await response.json();
         return data;
     }
@@ -34,6 +39,9 @@ class RestClient {
     async delete(url: string): Promise<any> {
         const response = await fetch(this.baseUrl + url, {
             method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
         const data = await response.json();
         return data;

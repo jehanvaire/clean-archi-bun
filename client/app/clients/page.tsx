@@ -17,6 +17,8 @@ const modalContent = [
   { input: "email", name: "Email" },
 ];
 
+const typeProps = "utilisateur";
+
 async function getClients() {
   return await clientsService.getClients();
 }
@@ -27,17 +29,20 @@ export default function Clients() {
   const [modalOpen, setModalOpen] = React.useState(false);
 
   async function refreshClients(values: any) {
-    await clientsService.addClient(
-      {
-        nom: values.Nom,
-        prenom: values.Prénom,
-        mail: values.Email,
-      }
-    );
+    await clientsService.addClient({
+      nom: values.Nom,
+      prenom: values.Prénom,
+      mail: values.Email,
+    });
     setClients(await clientsService.getClients());
     setModalOpen(false);
   }
-  
+
+  async function deleteClient(item: any) {
+    await clientsService.deleteClient(item.id);
+    setClients(await clientsService.getClients());
+  }
+
   React.useEffect(() => {
     getClients().then((data) => {
       setClients(data);
@@ -64,14 +69,18 @@ export default function Clients() {
         </Button>
       </div>
       <div style={{ marginTop: "1rem" }}>
-        <TableActions clients={clients} columns={columns} />
+        <TableActions
+          clients={clients}
+          columns={columns}
+          onDelete={deleteClient}
+        />
       </div>
 
       {modalOpen && (
         <ModalCreationProps
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
-          typeProps="utilisateur"
+          typeProps={typeProps}
           modalContent={modalContent}
           onData={refreshClients}
         />

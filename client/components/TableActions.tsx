@@ -16,18 +16,32 @@ import { EyeIcon } from "@/components/EyeIcon";
 import Accordeon from "./Accordeon";
 import ModalSuppressionProps from "./ModalSuppressionProps";
 
-export default function TableActions(props: any) {
-  const { clients, columns } = props;
+interface ITableActionsProps {
+  clients: any[];
+  columns: any[];
+  onDelete: (data: any) => void;
+}
 
-  const [showModal, setShowModal] = React.useState(false);
+export default function TableActions({
+  clients,
+  columns,
+  onDelete,
+}: ITableActionsProps) {
+  const [showModalSuppression, setShowModalSuppression] = React.useState(false);
+
+  const [propToDelete, setPropToDelete] = React.useState<any>({});
 
   const handleClose = () => {
-    setShowModal(false);
+    setShowModalSuppression(false);
   };
 
+  const deleteItemModal = React.useCallback((item: any) => {
+    setPropToDelete(item);
+    setShowModalSuppression(true);
+  }, []);
+
   const deleteItem = React.useCallback((item: any) => {
-    setShowModal(true);
-    console.log("delete item", item);
+    onDelete(item);
   }, []);
 
   const renderCell = React.useCallback((item: any, columnKey: any) => {
@@ -64,7 +78,7 @@ export default function TableActions(props: any) {
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <DeleteIcon onClick={() => deleteItem(item.id)} />
+                <DeleteIcon onClick={() => deleteItemModal(item)} />
               </span>
             </Tooltip>
           </div>
@@ -97,7 +111,14 @@ export default function TableActions(props: any) {
           )}
         </TableBody>
       </Table>
-      {showModal && <ModalSuppressionProps onClose={handleClose} isOpen={true} typeProps={""} />}
+      {showModalSuppression && (
+        <ModalSuppressionProps
+          onClose={handleClose}
+          onDelete={deleteItem} // changer
+          isOpen={showModalSuppression}
+          propToDelete={propToDelete}
+        />
+      )}
     </>
   );
 }
